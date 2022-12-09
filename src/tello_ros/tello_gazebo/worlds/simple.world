@@ -9,6 +9,7 @@
       <max_step_size>0.001</max_step_size>
     </physics>
 
+
     <!-- Ground plane -->
     <include>
       <uri>model://ground_plane</uri>
