@@ -2,21 +2,11 @@ import time
 
 import rclpy
 from rclpy.node import Node
-
 from geometry_msgs.msg import Twist
-# from sensor_msgs.msg import Image, CameraInfo
-
 from tello_msgs.srv import TelloAction
-from rclpy.qos import qos_profile_sensor_data
-# Package to convert between ROS and OpenCV Images
-from cv_bridge import CvBridge, CvBridgeError
-import cv2  # OpenCV library
-import cv2.aruco as aruco
 
-from Pid import PID
 import numpy as np
-import matplotlib.pyplot as plt
-
+import paho.mqtt.client as mqtt
 
 class ActionManager(Node):
     def __init__(self):
@@ -36,10 +26,8 @@ class ActionManager(Node):
 
 
 class Controller(Node):
-
     def __init__(self):
         super().__init__('controller')
-
         # CREATE THE PUBLISHER FOR COMMAND VELOCITY
         self.cmd_vel_publisher_ = self.create_publisher(
             Twist, '/drone1/cmd_vel', 10)
@@ -52,9 +40,9 @@ class Controller(Node):
         self.v_yaw = 0.0
 
 
+
     def cmd_vel_loop(self):
         # TODO : execute received command safely
-
         msg = Twist()
         msg.linear.x = self.vx
         msg.linear.y = self.vy
@@ -62,12 +50,20 @@ class Controller(Node):
         msg.angular.z = self.v_yaw
         self.cmd_vel_publisher_.publish(msg)
 
+    def set_commands(self,vx,vy,vz, v_yaw):
+        self.vx = float(vx)
+        self.vy = float(vy)
+        self.vz = float(vz)
+        self.v_yaw = float(v_yaw)
+
 
 def main(args=None):
     rclpy.init(args=args)
 
     # Wait for take off service to be ready
     action_manager = ActionManager()
+
+    # TODO : this action should be triggered by MQTT communication
     action_manager.ask_for_takeoff()
     ready_to_continue_mission = False
 
