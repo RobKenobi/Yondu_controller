@@ -1,0 +1,4 @@
+Invoking command in '/home/robinson/tello_ros_ws/build/ros2_shared': CMAKE_PREFIX_PATH=/opt/ros/galactic /usr/bin/cmake --build /home/robinson/tello_ros_ws/build/ros2_shared -- -j20 -l20
+Invoked command in '/home/robinson/tello_ros_ws/build/ros2_shared' returned '0': CMAKE_PREFIX_PATH=/opt/ros/galactic /usr/bin/cmake --build /home/robinson/tello_ros_ws/build/ros2_shared -- -j20 -l20
+Invoking command in '/home/robinson/tello_ros_ws/build/ros2_shared': CMAKE_PREFIX_PATH=/opt/ros/galactic /usr/bin/cmake --install /home/robinson/tello_ros_ws/build/ros2_shared
+Invoked command in '/home/robinson/tello_ros_ws/build/ros2_shared' returned '0': CMAKE_PREFIX_PATH=/opt/ros/galactic /usr/bin/cmake --install /home/robinson/tello_ros_ws/build/ros2_shared

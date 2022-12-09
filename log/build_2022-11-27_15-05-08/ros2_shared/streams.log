@@ -1,0 +1,25 @@
+[0.051s] Invoking command in '/home/robinson/tello_ros_ws/build/ros2_shared': CMAKE_PREFIX_PATH=/opt/ros/galactic /usr/bin/cmake --build /home/robinson/tello_ros_ws/build/ros2_shared -- -j20 -l20
+[0.168s] Invoked command in '/home/robinson/tello_ros_ws/build/ros2_shared' returned '0': CMAKE_PREFIX_PATH=/opt/ros/galactic /usr/bin/cmake --build /home/robinson/tello_ros_ws/build/ros2_shared -- -j20 -l20
+[0.241s] Invoking command in '/home/robinson/tello_ros_ws/build/ros2_shared': CMAKE_PREFIX_PATH=/opt/ros/galactic /usr/bin/cmake --install /home/robinson/tello_ros_ws/build/ros2_shared
+[0.257s] -- Install configuration: ""
+[0.258s] -- Execute custom install script
+[0.263s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/include/ros2_shared/context_macros.hpp
+[0.265s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/include/ros2_shared/param_macros.hpp
+[0.265s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/include/ros2_shared/string_printf.hpp
+[0.267s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ament_index/resource_index/package_run_dependencies/ros2_shared
+[0.269s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ament_index/resource_index/parent_prefix_path/ros2_shared
+[0.271s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/environment/ament_prefix_path.sh
+[0.272s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/environment/ament_prefix_path.dsv
+[0.273s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/environment/path.sh
+[0.273s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/environment/path.dsv
+[0.274s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/local_setup.bash
+[0.274s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/local_setup.sh
+[0.277s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/local_setup.zsh
+[0.277s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/local_setup.dsv
+[0.277s] -- Symlinking: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/package.dsv
+[0.289s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ament_index/resource_index/packages/ros2_shared
+[0.291s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/cmake/ament_cmake_export_include_directories-extras.cmake
+[0.292s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/cmake/ros2_sharedConfig.cmake
+[0.293s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/cmake/ros2_sharedConfig-version.cmake
+[0.293s] -- Up-to-date symlink: /home/robinson/tello_ros_ws/install/ros2_shared/share/ros2_shared/package.xml
+[0.295s] Invoked command in '/home/robinson/tello_ros_ws/build/ros2_shared' returned '0': CMAKE_PREFIX_PATH=/opt/ros/galactic /usr/bin/cmake --install /home/robinson/tello_ros_ws/build/ros2_shared
