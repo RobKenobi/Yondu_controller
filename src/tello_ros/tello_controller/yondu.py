@@ -39,8 +39,6 @@ class Controller(Node):
         self.vz = 0.0
         self.v_yaw = 0.0
 
-
-
     def cmd_vel_loop(self):
         # TODO : execute received command safely
         msg = Twist()
@@ -65,6 +63,7 @@ def main(args=None):
 
     # TODO : this action should be triggered by MQTT communication
     action_manager.ask_for_takeoff()
+
     ready_to_continue_mission = False
 
     # Try to takeoff, wait for the return of the service
@@ -87,11 +86,14 @@ def main(args=None):
         try:
             while rclpy.ok():
                 rclpy.spin_once(controller)
+                # TODO : listen to the server to see if new information are available and set the command on the controller
+                # TODO : stop the drone if landing is asked
         except KeyboardInterrupt:
             print("Stopping the control. Ask for landing.")
         controller.destroy_node()
 
     # ASK FOR LANDING
+    # TODO : maybe change the location of this command
     action_manager.ask_for_landing()
     while rclpy.ok():
         rclpy.spin_once(action_manager)
