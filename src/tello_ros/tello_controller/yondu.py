@@ -55,14 +55,52 @@ class Controller(Node):
         self.v_yaw = float(v_yaw)
 
 
+# Global variables
+
+broker = "mqtt.eclipseprojects.io"
+broker_port = 1883
+topic_name = "takeoff"
+
+airborn = False
+flag_service_takeoff_called = False
+
+
+def on_message(client, userdata, msg):
+    global received_msg
+    topic = msg.topic
+
+    if topic == "takeoff":
+        takeoff = int(str(msg.payload.decode("utf-8")))
+        if takeoff == 1 and airborn is False:
+            flag_service_takeoff_called = True
+            action_manager.ask_for_takeoff()
+            
+
+    msg_decode = str(msg.payload.decode("utf-8"))
+    print("Message received:", msg_decode, "on topic", topic)
+    received_msg = msg_decode
+
+
 def main(args=None):
+    global action_manager, controller
+
     rclpy.init(args=args)
 
-    # Wait for take off service to be ready
+
+
+    # # Wait for take off service to be ready
     action_manager = ActionManager()
+    controller = Controller()
+
+    # MQTT initialisation
+    client = mqtt.Client("Drone")
+    client.connect(broker, broker_port)
+    client.subscribe(topic_name)
+    client.on_message = on_message
+    client.loop_start()
 
     # TODO : this action should be triggered by MQTT communication
-    action_manager.ask_for_takeoff()
+    # action_manager.ask_for_takeoff()
 
     ready_to_continue_mission = False
 
@@ -74,6 +112,7 @@ def main(args=None):
                 response = action_manager.future.result()
                 if response.rc == 1:  # OK
                     print("Take off is a success !")
+                    airborn = True
                     ready_to_continue_mission = True
                 else:  # NOT OK
                     print("Something is wrong with the takeoff. LANDING NOW")
@@ -82,7 +121,7 @@ def main(args=None):
             break
 
     if ready_to_continue_mission:
-        controller = Controller()
+        # controller = Controller()
         try:
             while rclpy.ok():
                 rclpy.spin_once(controller)
@@ -107,6 +146,7 @@ def main(args=None):
                 action_manager.get_logger().info("Service call failed %r" % (e,))
             break
 
+    client.loop_stop()
     rclpy.shutdown()
 
 
