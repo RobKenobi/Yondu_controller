@@ -8,6 +8,7 @@ from tello_msgs.srv import TelloAction
 import numpy as np
 import paho.mqtt.client as mqtt
 
+
 class ActionManager(Node):
     def __init__(self):
         super().__init__('controller_manager')
@@ -46,47 +47,79 @@ class Controller(Node):
         msg.linear.y = self.vy
         msg.linear.z = self.vz
         msg.angular.z = self.v_yaw
+
+        # Reset values
+        self.vx = 0.0
+        self.vy = 0.0
+        self.vz = 0.0
+        self.v_yaw = 0.0
+
+        # Publishing
         self.cmd_vel_publisher_.publish(msg)
 
-    def set_commands(self,vx,vy,vz, v_yaw):
-        self.vx = float(vx)
-        self.vy = float(vy)
-        self.vz = float(vz)
-        self.v_yaw = float(v_yaw)
+    def set_commands(self, vx=None, vy=None, vz=None, v_yaw=None):
+        if vx is not None:
+            self.vx = float(vx)
+        if vy is not None:
+            self.vy = float(vy)
+        if vz is not None:
+            self.vz = float(vz)
+        if v_yaw is not None:
+            self.v_yaw = float(v_yaw)
 
 
 # Global variables
 
 broker = "mqtt.eclipseprojects.io"
 broker_port = 1883
-topic_name = "takeoff"
 
 airborn = False
 flag_service_takeoff_called = False
+flag_service_landing_called = False
 
 
 def on_message(client, userdata, msg):
-    global received_msg
+
+    global flag_service_takeoff_called, airborn, flag_service_landing_called
     topic = msg.topic
+    topic = topic.split('/')[-1]
+    speed = 0.5
 
     if topic == "takeoff":
         takeoff = int(str(msg.payload.decode("utf-8")))
         if takeoff == 1 and airborn is False:
             flag_service_takeoff_called = True
             action_manager.ask_for_takeoff()
-            
 
-    msg_decode = str(msg.payload.decode("utf-8"))
-    print("Message received:", msg_decode, "on topic", topic)
-    received_msg = msg_decode
+    if topic == "landing" and airborn:
+        action_manager.ask_for_landing()
+        flag_service_landing_called = True
+
+    if topic == "vx" and airborn is True:
+        vx = int(str(msg.payload.decode("utf-8")))
+        controller.vx = vx * speed
+        print("vx")
+
+    if topic == "vy" and airborn is True:
+        vy = int(str(msg.payload.decode("utf-8")))
+        controller.vy = vy * speed
+        print("vy")
+
+    if topic == "vz" and airborn is True:
+        vz = int(str(msg.payload.decode("utf-8")))
+        controller.vz = vz * speed
+        print("vz")
+
+    if topic == "v_yaw" and airborn is True:
+        v_yaw = int(str(msg.payload.decode("utf-8")))
+        controller.v_yaw = v_yaw * speed
+        print("v_yaw")
 
 
 def main(args=None):
-    global action_manager, controller
+    global action_manager, controller, airborn
 
     rclpy.init(args=args)
-
-
 
     # # Wait for take off service to be ready
     action_manager = ActionManager()
@@ -95,7 +128,7 @@ def main(args=None):
     # MQTT initialisation
     client = mqtt.Client("Drone")
     client.connect(broker, broker_port)
-    client.subscribe(topic_name)
+    client.subscribe("YONDU/DroneCommand/#")
     client.on_message = on_message
     client.loop_start()
 
@@ -121,19 +154,16 @@ def main(args=None):
             break
 
     if ready_to_continue_mission:
-        # controller = Controller()
         try:
             while rclpy.ok():
                 rclpy.spin_once(controller)
-                # TODO : listen to the server to see if new information are available and set the command on the controller
-                # TODO : stop the drone if landing is asked
+                if flag_service_landing_called:
+                    break
         except KeyboardInterrupt:
             print("Stopping the control. Ask for landing.")
+            action_manager.ask_for_landing()
         controller.destroy_node()
 
-    # ASK FOR LANDING
-    # TODO : maybe change the location of this command
-    action_manager.ask_for_landing()
     while rclpy.ok():
         rclpy.spin_once(action_manager)
         if action_manager.future.done():
@@ -141,6 +171,7 @@ def main(args=None):
                 response = action_manager.future.result()
                 if response.rc == 1:  # OK
                     print("Landing is a success !")
+                    airborn = False
                     break  # Only if landing is ok
             except Exception as e:
                 action_manager.get_logger().info("Service call failed %r" % (e,))
