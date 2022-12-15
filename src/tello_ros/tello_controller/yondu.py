@@ -57,16 +57,6 @@ class Controller(Node):
         # Publishing
         self.cmd_vel_publisher_.publish(msg)
 
-    def set_commands(self, vx=None, vy=None, vz=None, v_yaw=None):
-        if vx is not None:
-            self.vx = float(vx)
-        if vy is not None:
-            self.vy = float(vy)
-        if vz is not None:
-            self.vz = float(vz)
-        if v_yaw is not None:
-            self.v_yaw = float(v_yaw)
-
 
 # Global variables
 
@@ -98,22 +88,22 @@ def on_message(client, userdata, msg):
     if topic == "vx" and airborn is True:
         vx = int(str(msg.payload.decode("utf-8")))
         controller.vx = vx * speed
-        print("vx")
+        # print("vx")
 
     if topic == "vy" and airborn is True:
         vy = int(str(msg.payload.decode("utf-8")))
         controller.vy = vy * speed
-        print("vy")
+        # print("vy")
 
     if topic == "vz" and airborn is True:
         vz = int(str(msg.payload.decode("utf-8")))
         controller.vz = vz * speed
-        print("vz")
+        # print("vz")
 
     if topic == "v_yaw" and airborn is True:
         v_yaw = int(str(msg.payload.decode("utf-8")))
         controller.v_yaw = v_yaw * speed
-        print("v_yaw")
+        # print("v_yaw")
 
 
 def main(args=None):
@@ -121,7 +111,7 @@ def main(args=None):
 
     rclpy.init(args=args)
 
-    # # Wait for take off service to be ready
+    # Wait for take off service to be ready
     action_manager = ActionManager()
     controller = Controller()
 
@@ -131,9 +121,6 @@ def main(args=None):
     client.subscribe("YONDU/DroneCommand/#")
     client.on_message = on_message
     client.loop_start()
-
-    # TODO : this action should be triggered by MQTT communication
-    # action_manager.ask_for_takeoff()
 
     ready_to_continue_mission = False
 
