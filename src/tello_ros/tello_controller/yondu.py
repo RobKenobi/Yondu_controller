@@ -60,7 +60,7 @@ class Controller(Node):
 
 # Global variables
 
-broker = "mqtt.eclipseprojects.io"
+broker = "broker.hivemq.com"
 broker_port = 1883
 
 airborn = False
